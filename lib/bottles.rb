@@ -1,21 +1,22 @@
 require 'pry'
 class Bottles
+  MAX_BOTTLE = 99
+  MIN_BOTTLE = 0
+
   def verse(bottles_remaining)
     phrase(bottles_remaining)
   end
 
   def verses(high_bottle, low_bottle)
-    song = ""
-    high_bottle.downto(low_bottle) do |bottle_number|
+    [*low_bottle..high_bottle].reverse.inject("") do |song, bottle_number|
       song += "#{verse(bottle_number)}"
-      song += "\n" unless bottle_number == low_bottle
+      song += "\n" unless last_bottle?(bottle_number, low_bottle)
+      song
     end
-
-    song
   end
 
   def song
-    verses(99, 0)
+    verses(MAX_BOTTLE, MIN_BOTTLE)
   end
 
   private
@@ -40,10 +41,10 @@ Go to the store and buy some more, 99 bottles of beer on the wall.
   end
 
   def pluralize_bottles(number_of_bottles)
-    if number_of_bottles > 1
-      "bottles"
-    else
-      "bottle"
-    end
+    number_of_bottles > 1 ? "bottles" : "bottle"
+  end
+
+  def last_bottle?(bottle_number, low_bottle)
+    bottle_number == low_bottle
   end
 end
